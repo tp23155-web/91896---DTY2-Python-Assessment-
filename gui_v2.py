@@ -3,10 +3,15 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 
 def submit_details(): # on submit gets name, if empty returns error, else prints name and status type
-    name = name_entry.get().strip()
+    name = name_entry.get().strip().lower()
     item_status = status_box.get() 
-    item = item_entry.get().strip()
+    item = item_entry.get().strip().lower()
     quantity = quantity_entry.get().strip()
+    print(name)
+    print(item)
+    print(quantity)
+    print(item_status)
+
     if name == "":
         messagebox.showerror("Input Error","Name cannot be blank")
         return
