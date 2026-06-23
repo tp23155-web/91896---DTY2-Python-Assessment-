@@ -21,7 +21,13 @@ def submit_details(): # on submit gets name, if empty returns error, else prints
     elif quantity == "":
         messagebox.showerror("Input Error","Quantity cannot be blank")
         return
-    
+    elif isinstance(quantity, float):
+        messagebox.showerror("Error", "For quantity please enter an integer (ie: a number which does not have a decimal point).")
+    try:
+        new_quantity = int(quantity)
+    except ValueError:
+        messagebox.showerror("Error", "For quantity please enter an integer (ie: a number which does not have a decimal point).")
+
 root = tk.Tk()
 root.title("Party Hire Shop")
 root.geometry ("300x300")
