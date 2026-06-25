@@ -1,4 +1,3 @@
-
 import tkinter as tk
 from tkinter import ttk, messagebox
 import random
@@ -18,9 +17,24 @@ def submit_details():
     if quantity == "":
         messagebox.showerror("Input Error", "Quantity cannot be blank")
         return
+
+    # 2. Validate and convert quantity
+    try:
+        new_quantity = int(quantity)
+    except ValueError:
+        messagebox.showerror("Error", "For quantity please enter a whole number (integer) without decimals.")
+        return
+
+    # 3. Check number boundary cases
+    if new_quantity <= 0:
+        messagebox.showerror("Error", "Quantity must be greater than 0")
+        return
+    elif new_quantity > 500:
+        messagebox.showerror("Error", "Quantity must be 500 or less")
+        return
     
     
-    
+    #Insert Receipt here
     
 
     # If everything passes, print for testing
@@ -28,7 +42,7 @@ def submit_details():
     print(item)
     print(new_quantity)
     print(item_status)
-    
+    print(receipt)
     
 
 def exit_program():
