@@ -1,13 +1,31 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import random
+
+final_name = []
+item_hired = []
+quantity_hired = []
+item_receipts = []
+
+def save_data():
+    with open("party_hire.txt", "w") as file:
+
+        file.write("----------------------------------------------------------------------------------------------------\n")
+        file.write("Party Hire".center(100)+ "\n")
+        file.write("----------------------------------------------------------------------------------------------------\n\n")
+
+        for i in range(len(final_name)):
+            file.write(f"Name: {final_name[i]}\n")
+            file.write(f"Item: {item_hired[i]}\n")
+            file.write(f"Qauntity: {quantity_hired[i]}\n")
+            file.write(f"Receipt Number: {item_receipts[i]}\n\n")
+
 def submit_details():
     name = name_entry.get().strip().lower()
     item = item_entry.get().strip().lower()
     quantity = quantity_entry.get().strip()
-    item_status = status_box.get() 
 
-    # 1. Check for Boxes
+    # 1. Check for Input in Boxes
     if name == "":
         messagebox.showerror("Input Error", "Name cannot be blank")
         return
@@ -42,16 +60,21 @@ def submit_details():
     print(name)
     print(item)
     print(new_quantity)
-    print(item_status)
     print(receipts)
-    
+    save_data()
+
+    final_name.append(name)
+    item_hired.append(item)
+    quantity_hired.append(new_quantity)
+    item_receipts.append(receipts)
+
 
 def exit_program():
     root.quit()
 
 root = tk.Tk()
 root.title("Party Hire Shop")
-root.geometry ("300x300")
+root.geometry ("300x400")
 
 title_label = ttk.Label(root, text="Party Hire Shop", font=("Verdana", 18, "bold"))
 title_label.grid(row=0, column=1, columnspan=2, pady=10)
@@ -68,17 +91,21 @@ ttk.Label(root, text="Quantity"). grid(row=3, column=0, sticky="e")
 quantity_entry= ttk.Entry(root, width=25)
 quantity_entry.grid(row=3, column =1)
 
+returns_label = ttk.Label(root, text="Returns", font=("Verdana", 18, "bold"))
+returns_label.grid(row=5, column=1, columnspan=2, pady=10)
 
-ttk.Label(root, text= "Hired/Returned"). grid(row=4, column=0, sticky="e")
-status_box = ttk.Combobox(root, values = ["Hired", "Returned"], state = "readonly")
-status_box.grid(row=4, column=1)
+status_box = ttk.Combobox(root, values = [], state = "readonly")
+status_box.grid(row=6, column=1)
 status_box.current(0)
 
 submit_btn = ttk.Button(root, text= "Enter Details", command = submit_details)
-submit_btn.grid(row=5, column=1, pady=10)
+submit_btn.grid(row=4, column=1, pady=10)
+
+return_box = ttk.Button(root, text="Return", command = return_orders)
+return_box.grid(row=8, column=1, pady=10)
 
 finish_btn = ttk.Button(root, text="Quit", command = exit_program)
-finish_btn.grid(row=7, column=1, pady=10)
+finish_btn.grid(row=9, column=1, pady=10)
 
 
 root.mainloop() 
