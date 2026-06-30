@@ -61,7 +61,7 @@ def submit_details():
     print(item)
     print(new_quantity)
     print(receipts)
-    save_data()
+    
 
     final_name.append(name)
     item_hired.append(item)
