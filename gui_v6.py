@@ -1,4 +1,3 @@
-
 import tkinter as tk
 from tkinter import ttk, messagebox
 import random
@@ -27,8 +26,6 @@ def save_data():
         file.write("Party Hire".center(100)+ "\n")
         file.write("----------------------------------------------------------------------------------------------------\n\n")
 
-        # writes every valid input to text file, assigns each order an index number
-
         for i in range(len(final_name)):
             file.write(f"Name: {final_name[i]}\n")
             file.write(f"Item: {item_hired[i]}\n")
@@ -40,8 +37,9 @@ def submit_details():
     name = name_entry.get().strip().lower()
     item = item_entry.get().strip().lower()
     quantity = quantity_entry.get().strip()
+    manual_receipt = receipt_entry.get().strip() 
 
-    # Check for Input in Boxes
+    # Check for input in boxes
     if name == "" or item == "" or quantity == "":
         messagebox.showerror("Input Error", "All boxes must be filled out.")
         return
@@ -58,8 +56,24 @@ def submit_details():
         messagebox.showerror("Error", "Quantity must be between 1 and 500.")
         return
 
-    # Generate a unique random number for receipt
-    receipts = random.sample(range(1, 100000), 1)[0]
+    # able to enter receipt manually
+    if manual_receipt != "":
+        try:
+            receipts = int(manual_receipt)
+        except ValueError:
+            messagebox.showerror("Error", "Manual receipt must be a whole number.")
+            return
+        
+        # Check if the receipt number is already taken
+        if receipts in item_receipts:
+            messagebox.showerror("Error", f"Receipt number {receipts} already exists. Please choose another.")
+            return
+    else:
+        # Generate a unique random number for receipt if left blank
+        while True:
+            receipts = random.randint(1, 100000)
+            if receipts not in item_receipts:
+                break
     
     # Append to lists
     final_name.append(name)
@@ -75,27 +89,23 @@ def submit_details():
     status_box['values'] = dropdown_list
     status_box.set(f"{receipts} - {name.title()}") 
     
-    
     # Clear boxes for next entry
     name_entry.delete(0, tk.END)
     item_entry.delete(0, tk.END)
     quantity_entry.delete(0, tk.END)
+    receipt_entry.delete(0, tk.END) # Clear the receipt entry box
     
     messagebox.showinfo("Success", f"Details added! Receipt: {receipts}")
 
 def return_orders():
-    # Get the position of the selected item in the dropdown
     index = status_box.current()
 
-    # ensures box is full (-1 means nothing is selected)
     if index == -1:
         messagebox.showerror("Error", "Please select a receipt to return.")
         return
 
-    # Pull the receipt number for the success message box
     receipt = item_receipts[index]
 
-    # Removes details from all lists using the selected index 
     del final_name[index]
     del item_hired[index]
     del quantity_hired[index]
@@ -103,7 +113,6 @@ def return_orders():
     
     save_data()
     
-    # Update dropdown menu with the remaining items
     dropdown_list = [f"{item_receipts[i]} - {final_name[i].title()}" for i in range(len(item_receipts))]
     status_box['values'] = dropdown_list
     status_box.set("") 
@@ -134,23 +143,25 @@ ttk.Label(root, text="Quantity:").grid(row=3, column=0, sticky="e", padx=5, pady
 quantity_entry = ttk.Entry(root, width=20)
 quantity_entry.grid(row=3, column=1, padx=5, pady=5)
 
+# Changed name to 'receipt_entry' to avoid conflict with the 'receipt' integer variable
+tk.Label(root, text="Receipt (Opt):").grid(row=4, column=0, sticky="e", padx=5, pady=5)
+receipt_entry = ttk.Entry(root, width=20)
+receipt_entry.grid(row=4, column=1, padx=5, pady=5)
+
 submit_btn = ttk.Button(root, text="Enter Details", command=submit_details)
-submit_btn.grid(row=4, column=0, columnspan=2, pady=10)
+submit_btn.grid(row=5, column=0, columnspan=2, pady=10)
 
 returns_label = ttk.Label(root, text="Returns", font=("Verdana", 16, "bold"))
-returns_label.grid(row=5, column=0, columnspan=2, pady=10)
+returns_label.grid(row=6, column=0, columnspan=2, pady=10)
 
-# Combobox box to hold the receipts
 status_box = ttk.Combobox(root, values=[], state="readonly", width=18)
-status_box.grid(row=6, column=0, columnspan=2, pady=5)
+status_box.grid(row=7, column=0, columnspan=2, pady=5)
 
 return_btn = ttk.Button(root, text="Return Item", command=return_orders)
-return_btn.grid(row=7, column=0, columnspan=2, pady=5)
+return_btn.place(x = 35, y = 325)
 
 finish_btn = ttk.Button(root, text="Quit", command=exit_program)
-finish_btn.grid(row=8, column=0, columnspan=2, pady=15)
+finish_btn.place(x = 150, y = 325)
 
-# Trigger instructions immediately after the main window loads
 root.after(100, instructions)
-
 root.mainloop()

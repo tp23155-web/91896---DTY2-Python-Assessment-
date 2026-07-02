@@ -2,3 +2,13 @@
                                              Party Hire                                             
 ----------------------------------------------------------------------------------------------------
 
+Name: teo
+Item: sponge
+Quantity: 12
+Receipt Number: 33523
+
+Name: bob
+Item: pie
+Quantity: 2
+Receipt Number: 22222
+
